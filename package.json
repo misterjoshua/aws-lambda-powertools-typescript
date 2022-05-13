@@ -8,7 +8,7 @@
     "packages/commons",
     "packages/logger",
     "packages/metrics",
-    "packages/tracing",
+    "packages/tracer",
     "packages/parameters"
   ],
   "scripts": {
