@@ -1,6 +1,6 @@
 import { strict as assert } from 'assert';
 import { fromBase64 } from '@aws-sdk/util-base64-node';
-import { ClassForBaseProvider, ExpirableValue, GetMultipleOptionsInterface, GetOptionsInterface } from '../types';
+import { ClassForBaseProvider, ExpirableValue, GetMultipleOptionsInterface, GetOptionsInterface } from './types';
 
 const DEFAULT_MAX_AGE_SECS = 5;
 const TRANSFORM_METHOD_JSON = 'json';

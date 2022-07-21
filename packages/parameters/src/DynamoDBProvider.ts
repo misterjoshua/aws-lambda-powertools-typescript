@@ -1,5 +1,5 @@
 import { BaseProvider } from './BaseProvider';
-import { AttributesOptions, GetItemCommandOptions, QueryCommandOptions } from '../types/DynamoDBProvider';
+import { AttributesOptions, GetItemCommandOptions, QueryCommandOptions } from './types/DynamoDBProvider';
 import { DynamoDBClient, DynamoDBClientConfig, GetItemCommand, QueryCommand, QueryCommandInput, QueryCommandOutput } from '@aws-sdk/client-dynamodb';
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb';
 

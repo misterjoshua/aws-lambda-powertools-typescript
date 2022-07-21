@@ -1,5 +1,5 @@
-import { GetOptionsInterface } from '../types/BaseProvider';
-import { GetSecretValueOptions } from '../types/SecretsProvider';
+import { GetOptionsInterface } from './types/BaseProvider';
+import { GetSecretValueOptions } from './types/SecretsProvider';
 import { DEFAULT_PROVIDERS ,BaseProvider } from './BaseProvider';
 import { SecretsManagerClient, GetSecretValueCommand, SecretsManagerClientConfig } from '@aws-sdk/client-secrets-manager';
 
