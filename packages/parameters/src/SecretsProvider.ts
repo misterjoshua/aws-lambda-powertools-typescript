@@ -26,7 +26,7 @@ class SecretsProvider extends BaseProvider {
   }
 }
 
-const get_secret = async (name: string, options?: GetOptionsInterface): Promise<void | string | Record<string, unknown>> => {
+const getSecret = async (name: string, options?: GetOptionsInterface): Promise<void | string | Record<string, unknown>> => {
   // Only create the provider if this function is called at least once
   if (!DEFAULT_PROVIDERS.has('secrets')) {
     DEFAULT_PROVIDERS.set('secrets', new SecretsProvider());
@@ -37,5 +37,5 @@ const get_secret = async (name: string, options?: GetOptionsInterface): Promise<
 
 export {
   SecretsProvider,
-  get_secret
+  getSecret
 };

@@ -1,5 +1,12 @@
+/**
+ * Test BaseProvider class
+ *
+ * @group unit/parameters/baseProvider/class
+ */
+
 import { BaseProvider } from '../../src';
 import { toBase64 } from '@aws-sdk/util-base64-node';
+import { AssertionError } from 'node:assert';
 
 const encoder = new TextEncoder();
 
@@ -26,12 +33,13 @@ describe('Class: BaseProvider', () => {
       try {
         await provider.get('my-parameter');
       } catch (error) {
-        expect(error.message).toEqual('Error: Some error.');
+        expect(error).toEqual(Error('Some error.'));
       }
 
     });
 
     test('when called with an unsupported transform, it throws', async () => {
+
       // Prepare
       const mockData = JSON.stringify({ foo: 'bar' });
       class TestProvider extends BaseProvider {
@@ -50,12 +58,13 @@ describe('Class: BaseProvider', () => {
       try {
         await provider.get('my-parameter', { transform: 'foo' });
       } catch (error) {
-        expect(error.message).toEqual('Invalid transform type foo.');
+        expect(error).toEqual(Error('Invalid transform type foo.'));
       }
 
     });
 
     test('when called and a cached value is available, it returns an the cached value', async () => {
+
       // Prepare
       class TestProvider extends BaseProvider {
         public _get(_name: string): Promise<string> {
@@ -75,9 +84,11 @@ describe('Class: BaseProvider', () => {
   
       // Assess
       expect(values).toEqual('my-value');
+
     });
 
     test('when called with a json transform, and the value is a valid string representation of a JSON, it returns an object', async () => {
+
       // Prepare
       const mockData = JSON.stringify({ foo: 'bar' });
       class TestProvider extends BaseProvider {
@@ -103,6 +114,7 @@ describe('Class: BaseProvider', () => {
     });
     
     test('when called with a json transform, and the value is NOT a valid string representation of a JSON, it throws', async () => {
+
       // Prepare
       const mockData = `${JSON.stringify({ foo: 'bar' })}{`;
       class TestProvider extends BaseProvider {
@@ -117,12 +129,7 @@ describe('Class: BaseProvider', () => {
       const provider = new TestProvider();
 
       // Act / Assess
-      expect.assertions(1);
-      try {
-        await provider.get('my-parameter', { transform: 'json' });
-      } catch (error) {
-        expect(error.message).toEqual('SyntaxError: Unexpected token { in JSON at position 13');
-      }
+      await expect(provider.get('my-parameter', { transform: 'json' })).rejects.toThrowError(SyntaxError);
 
     });
 
@@ -150,6 +157,7 @@ describe('Class: BaseProvider', () => {
     });
 
     test('when called with a binary transform, and the value is NOT a valid string representation of a binary, it throws', async () => {
+
       // Prepare
       const mockBinary = 'qw';
       class TestProvider extends BaseProvider {
@@ -164,12 +172,7 @@ describe('Class: BaseProvider', () => {
       const provider = new TestProvider();
 
       // Act / Assess
-      expect.assertions(1);
-      try {
-        await provider.get('my-parameter', { transform: 'binary' });
-      } catch (error) {
-        expect(error.message).toEqual('AssertionError [ERR_ASSERTION]: false == true');
-      }
+      await expect(provider.get('my-parameter', { transform: 'binary' })).rejects.toThrowError(AssertionError);
 
     });
 
@@ -191,16 +194,12 @@ describe('Class: BaseProvider', () => {
       const provider = new TestProvider();
 
       // Act / Assess
-      expect.assertions(1);
-      try {
-        await provider.getMultiple('my-parameter');
-      } catch (error) {
-        expect(error.message).toEqual('Error: Some error.');
-      }
+      await expect(provider.getMultiple('my-parameter')).rejects.toThrowError(Error);
 
     });
 
     test('when called with a json transform, and all the values are a valid string representation of a JSON, it returns an object with all the values', async () => {
+
       // Prepare
       const mockData = JSON.stringify({ foo: 'bar' });
       class TestProvider extends BaseProvider {
@@ -228,6 +227,7 @@ describe('Class: BaseProvider', () => {
     });
     
     test('when called, it returns an object with the values', async () => {
+
       // Prepare
       class TestProvider extends BaseProvider {
         public _get(_name: string): Promise<string> {
@@ -253,6 +253,7 @@ describe('Class: BaseProvider', () => {
     });
 
     test('when called with a json transform, and one of the values is NOT a valid string representation of a JSON, it returns an object with partial failures', async () => {
+
       // Prepare
       const mockData = JSON.stringify({ foo: 'bar' });
       class TestProvider extends BaseProvider {
@@ -281,6 +282,7 @@ describe('Class: BaseProvider', () => {
     });
 
     test('when called with a json transform and throwOnTransformError, and at least ONE the values is NOT a valid string representation of a JSON, it throws', async () => {
+
       // Prepare
       const mockData = JSON.stringify({ foo: 'bar' });
       class TestProvider extends BaseProvider {
@@ -295,16 +297,12 @@ describe('Class: BaseProvider', () => {
       const provider = new TestProvider();
 
       // Act / Assess
-      expect.assertions(1);
-      try {
-        await provider.getMultiple('my-path', { transform: 'json', throwOnTransformError: true });
-      } catch (error) {
-        expect(error.message).toEqual('SyntaxError: Unexpected token { in JSON at position 13');
-      }
+      await expect(provider.getMultiple('my-path', { transform: 'json', throwOnTransformError: true })).rejects.toThrowError(SyntaxError);
 
     });
 
     test('when called with a binary transform, and all the values are a valid string representation of a binary, it returns an object with all the values', async () => {
+
       // Prepare
       const mockBinary = toBase64(encoder.encode('my-value'));
       class TestProvider extends BaseProvider {
@@ -330,6 +328,7 @@ describe('Class: BaseProvider', () => {
     });
 
     test('when called with a binary transform, and one of the values is NOT a valid string representation of a binary, it returns an object with partial failures', async () => {
+
       // Prepare
       const mockBinary = toBase64(encoder.encode('my-value'));
       class TestProvider extends BaseProvider {
@@ -356,6 +355,7 @@ describe('Class: BaseProvider', () => {
     });
 
     test('when called with a binary transform and throwOnTransformError, and at least ONE the values is NOT a valid string representation of a binary, it throws', async () => {
+
       // Prepare
       class TestProvider extends BaseProvider {
         public _get(_name: string): Promise<string> {
@@ -369,16 +369,12 @@ describe('Class: BaseProvider', () => {
       const provider = new TestProvider();
 
       // Act / Assess
-      expect.assertions(1);
-      try {
-        await provider.getMultiple('my-path', { transform: 'binary', throwOnTransformError: true });
-      } catch (error) {
-        expect(error.message).toEqual('AssertionError [ERR_ASSERTION]: false == true');
-      }
+      await expect(provider.getMultiple('my-path', { transform: 'binary', throwOnTransformError: true })).rejects.toThrowError(AssertionError);
 
     });
 
     test('when called with auto transform and the key of the parameter ends with `.binary`, and all the values are a valid string representation of a binary, it returns an object with all the transformed values', async () => {
+
       // Prepare
       const mockBinary = toBase64(encoder.encode('my-value'));
       class TestProvider extends BaseProvider {
@@ -404,6 +400,7 @@ describe('Class: BaseProvider', () => {
     });
 
     test('when called with auto transform and the key of the parameter DOES NOT end with `.binary` or `.json`, it returns an object with all the values NOT transformed', async () => {
+
       // Prepare
       const mockBinary = toBase64(encoder.encode('my-value'));
       class TestProvider extends BaseProvider {
@@ -429,6 +426,7 @@ describe('Class: BaseProvider', () => {
     });
 
     test('when called with a binary transform, and at least ONE the values is undefined, it returns an object with one of the values undefined', async () => {
+
       // Prepare
       class TestProvider extends BaseProvider {
         public _get(_name: string): Promise<string> {
@@ -452,6 +450,7 @@ describe('Class: BaseProvider', () => {
     });
 
     test('when called and values cached are available, it returns an object with the cached values', async () => {
+
       // Prepare
       class TestProvider extends BaseProvider {
         public _get(_name: string): Promise<string> {
@@ -478,6 +477,7 @@ describe('Class: BaseProvider', () => {
     });
 
     test('when called and values cached are expired, it returns an object with the remote values', async () => {
+
       // Prepare
       class TestProvider extends BaseProvider {
         public _get(_name: string): Promise<string> {
@@ -500,6 +500,7 @@ describe('Class: BaseProvider', () => {
       expect(values).toMatchObject({
         'A': 'my-value',
       });
+
     });
 
   });

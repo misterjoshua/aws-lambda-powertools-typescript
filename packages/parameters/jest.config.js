@@ -1,7 +1,7 @@
 module.exports = {
   displayName: {
     name: 'AWS Lambda Powertools utility: PARAMETERS',
-    color: 'cyan',
+    color: 'green',
   },
   'runner': 'groups',
   'preset': 'ts-jest',

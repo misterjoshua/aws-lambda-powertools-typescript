@@ -1,3 +1,9 @@
+/**
+ * Test DynamoDBProvider class
+ *
+ * @group unit/parameters/dynamoDBProvider/class
+ */
+
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBProvider } from '../../src/DynamoDBProvider';
 import { marshall } from '@aws-sdk/util-dynamodb';
@@ -167,6 +173,8 @@ describe('Class: DynamoDBProvider', () => {
     });
 
     test('when called, and the parameter DOES NOT exist, it returns undefined', async () => {
+
+      // Prepare
       const provider = new DynamoDBProvider('TestTable');
       clientSpy.mockImplementation(() => ({}));
 
@@ -176,6 +184,7 @@ describe('Class: DynamoDBProvider', () => {
       // Assess
       expect(value).toBeUndefined();
       expect(clientSpy).toBeCalledTimes(1);
+
     });
   
   });
